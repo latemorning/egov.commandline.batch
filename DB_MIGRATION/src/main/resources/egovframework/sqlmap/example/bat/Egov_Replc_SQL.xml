@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Replc">
+
+    <typeAlias alias="replc" type="egovframework.example.bat.domain.replc.Replc" />
+    <typeAlias alias="shopInfo" type="egovframework.example.bat.domain.replc.ShopInfo" />
+
+	<select id="selectShopInfoList" resultClass="shopInfo">
+    <![CDATA[
+        SELECT
+                *
+          FROM
+              (
+                SELECT
+                        rownum AS rn
+                      , TB.*
+                  FROM
+                      (
+                        SELECT
+                                shop_code                           AS shopCode
+                              , shop_type                           AS shopType
+                              , shop_name                           AS shopName
+                              , usr_id                              AS usrId
+                              , shop_cal_sct                        AS shopCalSct
+                              , shop_sms_sct                        AS shopSmsSct
+                              , shop_sms_mk                         AS shopSmsMk
+                              , shop_sms_abs_sct                    AS shopSmsAbsSct
+                              , shop_sms_abs_mk                     AS shopSmsAbsMk
+                              , shop_sms_sedno                      AS shopSmsSedno
+                              , shop_exc                            AS shopExc
+                              , shop_email                          AS shopEmail
+                              , shop_del_mk                         AS shopDelMk
+                              , shop_remark                         AS shopRemark
+                              , reg_id                              AS regId
+                              , TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS regDt
+                              , chg_id                              AS chgId
+                              , TO_CHAR(chg_dt, 'YYYYMMDDHH24MISS') AS chgDt
+                              , shop_ot_seq                         AS shopOtSeq
+                              , regn_fg                             AS regnFg
+                              , shop_sms_res_sct                    AS shopSmsResSct
+                              , shop_sms_res_mk                     AS shopSmsResMk
+                              , shop_sms_resb_sct                   AS shopSmsResbSct
+                              , shop_sms_resb_mk                    AS shopSmsResbMk
+                              , cal2_usr_mk                         AS cal2UsrMk
+                          FROM
+                                shop_info
+                         WHERE
+                                1 = 1
+                         ORDER BY
+                                shop_code
+                      ) TB
+                 WHERE
+                        rownum <= (#_page# + 1) * #_pagesize#
+              )
+         WHERE
+                rn >= #_skiprows# + 1
+    ]]>
+	</select>
+
+
+	<insert id="insertReplc" parameterClass="replc">
+    <![CDATA[
+        INSERT INTO
+               ob_replc (
+                          replc_code
+                        , replc_ty
+                        , replc_nm
+                        , replc_gdcc
+                        , replc_excp_gdcc
+                        , sms_dsptch_no
+                        , replc_email
+                        , use_at
+                        , scd_call_use_at
+                        , hdqrtrs_code
+                        , remark
+                        , frst_regist_pnttm
+                        , frst_register_id
+                        , last_updt_pnttm
+                        , last_updusr_id
+                        )
+                 VALUES (
+                          #replcCode#
+                        , #replcTy#
+                        , #replcNm#
+                        , #replcGdcc#
+                        , #replcExcpGdcc#
+                        , #smsDsptchNo#
+                        , #replcEmail#
+                        , #useAt#
+                        , #scdCallUseAt#
+                        , #hdqrtrsCode#
+                        , #remark#
+                        , TO_DATE(#frstRegistPnttm#, 'YYYYMMDDHH24MISS')
+                        , #frstRegisterId#
+                        , TO_DATE(#lastUpdtPnttm#, 'YYYYMMDDHH24MISS')
+                        , #lastUpdusrId#
+                        )
+    ]]>
+	</insert>
+
+</sqlMap>

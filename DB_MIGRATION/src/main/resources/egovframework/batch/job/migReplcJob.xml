@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-3.0.xsd">
+
+	<import resource="abstract/eGovBase.xml" />
+
+	<job id="migReplcJob" parent="eGovBaseJob" xmlns="http://www.springframework.org/schema/batch">
+	    <step id="migReplcStep" parent="eGovBaseStep">
+	        <tasklet>
+	            <chunk reader="migReplcItemReader" processor="migReplcProcessor" writer="migReplcItemWriter" commit-interval="100" />
+	        </tasklet>
+	    </step>
+	</job>
+
+	<bean id="migReplcItemReader" class="org.springframework.batch.item.database.IbatisPagingItemReader">
+		<property name="queryId" value="selectShopInfoList" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+		<property name="dataSource" ref="dataSource0" />
+	</bean>
+
+
+	<bean id="migReplcItemWriter" class="org.springframework.batch.item.database.IbatisBatchItemWriter">
+		<property name="statementId" value="insertReplc" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="migReplcProcessor" class="egovframework.example.bat.domain.replc.ReplcProcessor" />
+
+</beans>
