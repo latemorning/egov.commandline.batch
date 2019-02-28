@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Replc">
+
+    <typeAlias alias="cntrct" type="egovframework.example.bat.domain.cntrct.Cntrct" />
+    <typeAlias alias="callGoodsMapng" type="egovframework.example.bat.domain.cntrct.CallGoodsMapng" />
+
+	<select id="selectCntrctList" resultClass="cntrct">
+    <![CDATA[
+        SELECT
+                *
+          FROM
+              (
+                SELECT
+                        rownum AS rn
+                      , TB.*
+                  FROM
+                      (
+                        SELECT
+                                shop_code                           AS shopCode
+                              , CASE WHEN scr_date = '99999999' THEN TO_CHAR(SYSDATE+365, 'YYYYMMDD') ELSE scr_date END AS scrDate
+                              , cgd_cd                              AS cgdCd
+                              , scr_mng_nm                          AS scrMngNm
+                              , scr_mng_tel                         AS scrMngTel
+                              , scr_mng_email                       AS scrMngEmail
+                              , scr_end_dt                          AS scrEndDt
+                              , scr_remark                          AS scrRemark
+                              , reg_id                              AS regId
+                              , TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS regDt
+                              , chg_id                              AS chgId
+                              , TO_CHAR(chg_dt, 'YYYYMMDDHH24MISS') AS chgDt
+                          FROM
+                                shop_contract_info
+                         WHERE
+                                1 = 1
+                         ORDER BY
+                                shop_code
+                      ) TB
+                 WHERE
+                        rownum <= (#_page# + 1) * #_pagesize#
+              )
+         WHERE
+                rn >= #_skiprows# + 1
+    ]]>
+	</select>
+
+
+	<insert id="insertCntrct" parameterClass="callGoodsMapng">
+    <![CDATA[
+        INSERT INTO
+               ob_replc_callgoods_mapng (
+						  replc_code
+						, goods_code
+						, cntrct_endde
+						, charger_nm
+						, charger_telno
+						, charger_email
+						, remark
+						, frst_regist_pnttm
+						, frst_register_id
+						, last_updt_pnttm
+						, last_updusr_id
+                        )
+                 VALUES (
+                          #replcCode#
+                        , #goodsCode#
+                        , TO_DATE(#cntrctEndde#, 'YYYYMMDD')
+                        , #chargerNm#
+                        , #chargerTelno#
+                        , #chargerEmail#
+                        , #remark#
+                        , TO_DATE(#frstRegistPnttm#, 'YYYYMMDDHH24MISS')
+                        , #frstRegisterId#
+                        , TO_DATE(#lastUpdtPnttm#, 'YYYYMMDDHH24MISS')
+                        , #lastUpdusrId#
+                        )
+    ]]>
+	</insert>
+
+</sqlMap>

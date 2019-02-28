@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CallTy">
+
+    <typeAlias alias="callTy" type="egovframework.example.bat.domain.callty.CallTy"/>
+    <typeAlias alias="callTypeInfo" type="egovframework.example.bat.domain.callty.CallTypeInfo"/>
+
+	<select id="selectCallTypeInfoList" resultClass="callTypeInfo">
+    <![CDATA[
+        SELECT
+                *
+          FROM
+              (
+                SELECT
+                        rownum AS rn
+                      , TB.*
+                  FROM
+                      (
+                        SELECT
+                                ctf_cd                              AS ctfCd
+                              , ctf_tp                              AS ctfTp
+                              , ctf_nm                              AS ctfNm
+                              , ctf_del_mk                          AS ctfDelMk
+                              , ctf_ot_seq                          AS ctfOtSeq
+                              , ctf_sys_cd                          AS ctfSysCd
+                              , reg_id                              AS regId
+                              , TO_CHAR(reg_dt, 'YYYYMMDDHH24MISS') AS regDt
+                              , chg_id                              AS chgId
+                              , TO_CHAR(chg_dt, 'YYYYMMDDHH24MISS') AS chgDt
+                              , ctf_abs_mk                          AS ctfAbsMk
+                              , ctf_sms_mk                          AS ctfSmsMk
+                              , ctf_sys_mk                          AS ctfSysMk
+                              , ctf_exc_mk                          AS ctfExcMk
+                          FROM
+                                call_type_info
+                         WHERE
+                                1 = 1
+                         ORDER BY
+                                ctf_cd
+                      ) TB
+                 WHERE
+                        rownum <= (#_page# + 1) * #_pagesize#
+              )
+         WHERE
+                rn >= #_skiprows# + 1
+    ]]>
+	</select>
+
+
+	<insert id="insertCallTy" parameterClass="callTy">
+    <![CDATA[
+        INSERT INTO
+               ob_call_ty (
+                          call_ty_code
+                        , call_ty_se
+                        , call_ty_nm
+                        , use_at
+                        , sort_ordr
+                        , othsys_code
+                        , absnce_call_at
+                        , sms_sndng_at
+                        , sys_code_at
+                        , excl_code_at
+                        , frst_regist_pnttm
+                        , frst_register_id
+                        , last_updt_pnttm
+                        , last_updusr_id
+                        )
+                 VALUES (
+                          #callTyCode#
+                        , #callTySe#
+                        , #callTyNm#
+                        , #useAt#
+                        , #sortOrdr#
+                        , #othsysCode#
+                        , #absnceCallAt#
+                        , #smsSndngAt#
+                        , #sysCodeAt#
+                        , #exclCodeAt#
+                        , TO_DATE(#frstRegistPnttm#, 'YYYYMMDDHH24MISS')
+                        , #frstRegisterId#
+                        , TO_DATE(#lastUpdtPnttm#, 'YYYYMMDDHH24MISS')
+                        , #lastUpdusrId#
+                        )
+    ]]>
+	</insert>
+
+</sqlMap>

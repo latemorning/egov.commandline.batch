@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-3.0.xsd">
+
+    <import resource="abstract/eGovBase.xml" />
+
+    <job id="migCallTyJob" parent="eGovBaseJob" xmlns="http://www.springframework.org/schema/batch">
+        <step id="migCallTyStep" parent="eGovBaseStep">
+            <tasklet>
+                <chunk reader="migCallTyItemReader" processor="migCallTyProcessor" writer="migCallTyItemWriter" commit-interval="100" />
+            </tasklet>
+        </step>
+    </job>
+
+    <bean id="migCallTyItemReader" class="org.springframework.batch.item.database.IbatisPagingItemReader">
+        <property name="queryId" value="selectCallTypeInfoList" />
+        <property name="sqlMapClient" ref="sqlMapClient" />
+        <property name="dataSource" ref="dataSource0" />
+    </bean>
+
+
+    <bean id="migCallTyItemWriter" class="org.springframework.batch.item.database.IbatisBatchItemWriter">
+        <property name="statementId" value="insertCallTy" />
+        <property name="sqlMapClient" ref="sqlMapClient" />
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="migCallTyProcessor" class="egovframework.example.bat.domain.callty.CallTyProcessor" />
+
+</beans>

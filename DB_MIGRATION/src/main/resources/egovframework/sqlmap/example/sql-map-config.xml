@@ -10,4 +10,6 @@
     <!-- <sqlMap resource="egovframework/sqlmap/example/bat/Egov_Example_SQL_oracle.xml"/> -->
     <!-- <sqlMap resource="egovframework/sqlmap/example/bat/Egov_Example_SQL_cubrid.xml"/> -->
     <sqlMap resource="egovframework/sqlmap/example/bat/Egov_Replc_SQL.xml"/>
+    <sqlMap resource="egovframework/sqlmap/example/bat/Egov_Cntrct_SQL.xml"/>
+    <sqlMap resource="egovframework/sqlmap/example/bat/Egov_CallTy_SQL.xml"/>
 </sqlMapConfig>
